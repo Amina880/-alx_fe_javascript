@@ -7,6 +7,9 @@ const displayButton = document.getElementById('newQuote')
 const newquoteInput = document.getElementById('newQuoteText')
 const newcategoryInput = document.getElementById('newQuoteCategory')
 
+displayButton.addEventListener('click', (displayRandomQuote));
+
+
 
 let quoteArray = [];
 
