@@ -44,6 +44,11 @@ function createAddQuoteForm(event){
         category: newcategory
     }
     quoteArray.push(newQuote);
+    
+    const listitem = document.createElement('li')
+    listitem.textcontent = `"${newQuote.newquoteTexttext}" - Category: ${newQuote.category}`
+    storedQuotesList.appendChild(listitem);
+
     newquoteInput.value = '';
     newcategoryInput.value = '';
     alert("Quote added successfully!")
