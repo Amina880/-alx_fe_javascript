@@ -8,20 +8,21 @@
   <body>
     <h1>Dynamic Quote Generator</h1>
     <div id="quoteDisplay">
-        
-
     </div>
-
     <button id="newQuote">Show New Quote</button>
     <br>
     <br>
-
+    <h2>Stored Quotes List</h2>
+    <ul id="storedQuotesList"></ul>
     <div>
         <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
         <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
-        <button onclick="createAddQuoteForm()">Add Quote</button>
+        <button id="Addbutton">Add Quote</button>
     </div>
-
+    <div>
+        <button id="export-quotes-btn">Export Quotes as JSON</button>
+    </div>
+    <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" />
     <script src="script.js"></script>
   </body>
   </html>
