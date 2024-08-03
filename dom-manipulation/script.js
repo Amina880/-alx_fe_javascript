@@ -103,7 +103,7 @@ async function syncQuotes() {
                 notifyUser('Data updated from server.');
             }
             // Update sync status
-            updateSyncStatus('Synced with server at ' + new Date().toLocaleTimeString());
+            updateSyncStatus('Quotes synced with server!' + new Date().);
         })
         .catch(error => {
             console.error('Error syncing with server:', error);
