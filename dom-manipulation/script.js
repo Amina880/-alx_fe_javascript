@@ -71,7 +71,7 @@ function createAddQuoteForm() {
     newcategoryInput.value = '';
     alert("Quote added successfully!")
 
-    populateCategoryDropdown();
+    populateCategories();
 }
 // Function to export quotes as JSON
 function exportQuotesAsJSON() {
@@ -101,7 +101,7 @@ function importFromJsonFile(event) {
     fileReader.readAsText(event.target.files[0]);
   }
 
-function populateCategoryDropdown() {
+function populateCategories() {
     const categories = Array.from(new Set(quoteArray.map(quote => quote.category)));
     categories.forEach(category => {
         const option = document.createElement('option');
@@ -110,7 +110,7 @@ function populateCategoryDropdown() {
         categoryFilter.appendChild(option);
     });
 }
-function filterQuotes() {
+function filterQuote() {
     const selectedCategory = categoryFilter.value;
     localStorage.setItem('selectedCategory', selectedCategory);
 
@@ -131,6 +131,6 @@ function restoreLastSelectedCategory() {
     const selectedCategory = localStorage.getItem('selectedCategory');
     if (selectedCategory) {
         categoryFilter.value = selectedCategory;
-        filterQuotes();
+        filterQuote();
     }
 }
