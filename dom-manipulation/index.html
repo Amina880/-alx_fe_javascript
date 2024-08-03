@@ -19,10 +19,18 @@
         <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
         <button id="Addbutton">Add Quote</button>
     </div>
+    <br>
     <div>
         <button id="export-quotes-btn">Export Quotes as JSON</button>
     </div>
+    <br>
     <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" />
+    <br>
+    <br>
+    <select id="categoryFilter" onchange="filterQuotes()">
+        <option value="all">All Categories</option>
+        <!-- Dynamically populated categories -->
+      </select>
     <script src="script.js"></script>
   </body>
   </html>

@@ -10,6 +10,7 @@ const newcategoryInput = document.getElementById('newQuoteCategory')
 const storedQuotesList = document.getElementById('storedQuotesList')
 const exportQuotesButton = document.getElementById('export-quotes-btn')
 const importbutton = document.getElementById('importFile')
+const categoryFilter = document.getElementById('categoryFilter')
 
 
 displayButton.addEventListener('click', (displayRandomQuote));
@@ -63,12 +64,14 @@ function createAddQuoteForm() {
     localStorage.setItem('qus', JSON.stringify(quoteArray));
     
     const listitem = document.createElement('li')
-    listitem.textcontent = `"${newQuote.newquoteTexttext}" - Category: ${newQuote.category}`
+    listitem.textcontent = `"${newQuote.quoteText}" - Category: ${newQuote.category}`
     storedQuotesList.appendChild(listitem);
 
     newquoteInput.value = '';
     newcategoryInput.value = '';
     alert("Quote added successfully!")
+
+    populateCategoryDropdown();
 }
 // Function to export quotes as JSON
 function exportQuotesAsJSON() {
@@ -97,3 +100,37 @@ function importFromJsonFile(event) {
     };
     fileReader.readAsText(event.target.files[0]);
   }
+
+function populateCategoryDropdown() {
+    const categories = Array.from(new Set(quoteArray.map(quote => quote.category)));
+    categories.forEach(category => {
+        const option = document.createElement('option');
+        option.value = category;
+        option.textContent = category;
+        categoryFilter.appendChild(option);
+    });
+}
+function filterQuotes() {
+    const selectedCategory = categoryFilter.value;
+    localStorage.setItem('selectedCategory', selectedCategory);
+
+    storedQuotesList.innerHTML = '';
+
+    const filteredQuotes = selectedCategory === 'all' 
+        ? quoteArray 
+        : quoteArray.filter(quote => quote.category === selectedCategory);
+
+    filteredQuotes.forEach(filteredquote => {
+        const listitem = document.createElement('li')
+        listitem.textcontent = `"${filteredquote.quoteText}" - Category: ${filteredquote.category}`
+        storedQuotesList.appendChild(listitem);
+
+    });
+}
+function restoreLastSelectedCategory() {
+    const selectedCategory = localStorage.getItem('selectedCategory');
+    if (selectedCategory) {
+        categoryFilter.value = selectedCategory;
+        filterQuotes();
+    }
+}
