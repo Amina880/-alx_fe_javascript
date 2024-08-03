@@ -60,11 +60,17 @@ function fetchQuotesFromServer(){
     })
     .catch(error => console.error('Error fetching quotes:', error));
 }
+const resp = await fetch('https://jsonplaceholder.typicode.com/todos/1');
 
+if (!resp.ok){
+    throw new Error ('Network response was not ok');
+}
+console.log(resp);
+const data7 = await resp.json();
 // Function to sync data with the server
-function syncWithServer() {
-    fetch(api_URL)
-        .then(response => response.json())
+async function syncQuotes() {
+    const resp = await fetch(api_URL)
+    const Data = await response.json()
         .then(serverQuotes => {
             const serverQuotesMapped = serverQuotes.slice(0, 10).map(post => ({
                 text: post.title,
