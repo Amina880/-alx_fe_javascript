@@ -69,7 +69,17 @@ console.log(resp);
 const data7 = await resp.json();
 // Function to sync data with the server
 async function syncQuotes() {
-    const resp = await fetch(api_URL)
+    const resp = await fetch(api_URL{
+        method: 'POST',
+        headers: {
+            'Authorization': 'Bearer <7878>',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            name: 'New Data',
+            description: 'Important information'
+        })
+    })
     const Data = await response.json()
         .then(serverQuotes => {
             const serverQuotesMapped = serverQuotes.slice(0, 10).map(post => ({
