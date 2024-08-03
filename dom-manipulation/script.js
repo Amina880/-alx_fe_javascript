@@ -12,13 +12,13 @@ const exportQuotesButton = document.getElementById('export-quotes-btn')
 const importbutton = document.getElementById('importFile')
 const categoryFilter = document.getElementById('categoryFilter')
 
+const api_URL = 'https://jsonplaceholder.typicode.com/posts'
 
-displayButton.addEventListener('click', (displayRandomQuote));
-addQuote.addEventListener('click', createAddQuoteForm);
-exportQuotesButton.addEventListener('click', exportQuotesAsJSON);
-importbutton.addEventListener('click', importFromJsonFile);
+let quoteArray = JSON.parse(localStorage.getItem('quotes')) || [];
 
 
+fetchQuotesFromServer();
+startPeriodicSync()
 
 function loadLastViewedQuote() {
     const lastViewedQuote = sessionStorage.getItem('lastViewedQuote');
@@ -26,9 +26,84 @@ function loadLastViewedQuote() {
         quoteDisplay.textContent = lastViewedQuote;
     }
 }
+restoreLastSelectedCategory();
+
+displayButton.addEventListener('click', (displayRandomQuote));
+addQuote.addEventListener('click', createAddQuoteForm);
+exportQuotesButton.addEventListener('click', exportQuotesAsJSON);
+importbutton.addEventListener('click', importFromJsonFile);
+
+function startPeriodicSync() {
+    setInterval(syncWithServer, 30000); // Sync every 30 seconds
+}
 
 
-let quoteArray = JSON.parse(localStorage.getItem('quotes')) || [];
+function fetchQuotesFromServer(){
+    fetch(api_URL)
+    .then(response => response.json())
+    .then(data => {
+        // For demo purposes, let's assume each post has a 'title' as the quote and 'body' as the author
+        quoteArray = data.slice(0, 10).map(post => ({
+            text: post.title,
+            category: post.body,
+            uniquekey: post.id
+        }));
+
+        localStorage.setItem('quotes', JSON.stringify(quoteArray));
+        storedQuotesList.innerHTML = '';
+        quoteArray.forEach(quotee => {
+            const listitem = document.createElement('li')
+            listitem.textcontent = `"${quotee.quoteText}" - Category: ${quotee.category}`
+            storedQuotesList.appendChild(listitem);
+        });
+        populateCategories();
+    })
+    .catch(error => console.error('Error fetching quotes:', error));
+}
+
+// Function to sync data with the server
+function syncWithServer() {
+    fetch(api_URL)
+        .then(response => response.json())
+        .then(serverQuotes => {
+            const serverQuotesMapped = serverQuotes.slice(0, 10).map(post => ({
+                text: post.title,
+                category: post.body,
+                uniquekey: post.id
+            }));
+
+            if (JSON.stringify(quoteArray) !== JSON.stringify(serverQuotesMapped)) {
+                quoteArray = serverQuotesMapped;
+                localStorage.setItem('quotes', JSON.stringify(quoteArray));
+
+                storedQuotesList.innerHTML = '';
+                quoteArray.forEach(quotee => {
+                const listitem = document.createElement('li')
+                listitem.textcontent = `"${quotee.quoteText}" - Category: ${quotee.category}`
+                storedQuotesList.appendChild(listitem);
+                });
+
+                populateCategories();
+                notifyUser('Data updated from server.');
+            }
+            // Update sync status
+            updateSyncStatus('Synced with server at ' + new Date().toLocaleTimeString());
+        })
+        .catch(error => {
+            console.error('Error syncing with server:', error);
+            updateSyncStatus('Failed to sync with server');
+        });
+}
+function updateSyncStatus(message) {
+    syncStatus.textContent = message;
+}
+function notifyUser(message) {
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    setTimeout(() => notification.remove(), 5000); // Remove after 5 seconds
+}
 
 
 function displayRandomQuote(){
